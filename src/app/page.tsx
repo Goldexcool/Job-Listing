@@ -181,9 +181,9 @@ export default function Home() {
             <div className="flex items-center gap-3 justify-center">
               <div>
                 <div className="flex flex-wrap lg:gap-0 gap-2 items-center md:ms-8">
-                  {job.languauges.map((language: any, index: number) => (
+                  {job.languauges.map((language: string, index: number) => (
                     <span
-                      key={language.id} // Use a unique identifier for each language
+                      key={index} // Use the index as the key
                       onClick={() => clicked(language)}
                       className='flex items-center ms-2 p-1 text-Desaturated-Dark-Cyan bg-Desaturated-Dark-Cyanbg rounded-md text-base cursor-pointer hover:bg-Desaturated-Dark-Cyan hover:text-Light-GrayishCyanBackground'
                     >
