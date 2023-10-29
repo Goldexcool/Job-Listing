@@ -6,6 +6,10 @@ import myhome from '../Images/myhome.svg';
 import loopstudios from '../Images/loop-studios.svg';
 import faceit from '../Images/faceit.svg';
 import shortly from '../Images/shortly.svg';
+import insure from '../Images/insure.svg'
+import eyecom from '../Images/eyecam-co.svg'
+import airFilter from '../Images/the-air-filter-company.svg'
+
 
 interface Job {
     id: number;
@@ -113,7 +117,45 @@ const jobs: Job[] = [
         location: "Worldwide",
         languauges: ["Frontend", "Junior", "HTML", "Sass", "JavaScript"],
         tools: [""]
+    },
+    {
+        id: 8,
+        Image01: insure,
+        company: "Insure",
+        new: false,
+        featured: false,
+        position: "Junior Frontend Developer",
+        postedAt: "2w ago",
+        contract: "Full Time",
+        location: "USA Only",
+        languauges: ["Frontend", "Junior", "Vue", "JavaScript", "Sass"],
+        tools: [""]
+    },
+    {
+        id: 9,
+        Image01: eyecom,
+        company: "Eyecam Co.",
+        new: false,
+        featured: false,
+        position: "Full Stack Engineer",
+        postedAt: "3w ago",
+        contract: "Full Time",
+        location: "Worldwide",
+        languauges: ["Fullstack", "Midweight", "JavaScript", "Django", "Python"],
+        tools: [""]
+    },
+    {
+        id: 10,
+        Image01: airFilter,
+        company: "The Air Filter Company",
+        new: false,
+        featured: false,
+        position: "Front-end Dev",
+        postedAt: "1mo ago",
+        contract: "Part Time",
+        location: "Worldwide",
+        languauges: ["Frontend", "Junior", "React", "Sass", "JavaScript"],
+        tools: [""]
     }
-
 ];
 export default jobs;
