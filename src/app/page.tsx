@@ -1,113 +1,201 @@
+"use client"
 import Image from 'next/image'
-
+import homeImg from '../Images/bg-header-desktop.svg'
+import jobs from '../Data/jobs'
+import { json } from 'stream/consumers'
+import remove from '../Images/icon-remove.svg'
+import Header from '../Components/Header'
+import Preloader from '@/Components/Preloader'
+import { useEffect, useState } from 'react'
 export default function Home() {
+  const [clickedLanguage, setClickedLanguages] = useState([""])
+  const [isLoading, setIsLoading] = useState(true);
+  const [filteredJobs, setFilteredJobs] = useState(jobs);
+
+
+  const clicked = (language:any) => {
+    // Toggle the clicked language
+    const updatedClickedLanguages = clickedLanguage.includes(language)
+      ? clickedLanguage.filter((lang) => lang !== language)
+      : [...clickedLanguage, language];
+  
+    setClickedLanguages(updatedClickedLanguages);
+  
+    // Filter the jobs based on all selected languages
+    const updatedFilteredJobs = jobs.filter((job) => {
+      return (
+        updatedClickedLanguages.length === 0 ||
+        updatedClickedLanguages.every((lang) => job.languauges.includes(lang))
+      );
+    });
+  
+    setFilteredJobs(updatedFilteredJobs);
+  
+    // Save the filtered jobs and clicked languages to local storage
+    localStorage.setItem('filteredJobs', JSON.stringify(updatedFilteredJobs));
+    localStorage.setItem('clickedLanguages', JSON.stringify(updatedClickedLanguages));
+  };
+
+  useEffect(() => {
+    try {
+      const storedFilteredJobsJSON = localStorage.getItem('filteredJobs');
+
+      if (storedFilteredJobsJSON) {
+        const storedFilteredJobs = JSON.parse(storedFilteredJobsJSON);
+        setFilteredJobs(storedFilteredJobs);
+      }
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Error parsing or retrieving filteredJobs from localStorage:', error);
+      setIsLoading(false);
+    }
+  }, []);
+
+
+
+  
+  useEffect(() => {
+    // This effect runs only once on component mount
+    setClickedLanguages([]); // Ensure it's empty when the component mounts
+  }, []);
+
+
+  useEffect(() => {
+    // Simulate loading data
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 10000);
+  }, []);
+
+
+  useEffect(() => {
+    // Retrieve the existing array from local storage when the component mounts
+    const existingClickedLanguages = localStorage.getItem('clickedLanguages');
+    if (existingClickedLanguages) {
+      const parsedClickedLanguages = JSON.parse(existingClickedLanguages);
+      setClickedLanguages(parsedClickedLanguages);
+    }
+
+    // Simulate loading data
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+  }, []);
+
+
+  if (isLoading) {
+    return <Preloader />;
+  }
+
+
+ 
+
+
+  const clearFilters = () => {
+    // Clear the selected languages and local storage
+    setClickedLanguages([]);
+    localStorage.removeItem('filteredJobs');
+    localStorage.removeItem('clickedLanguages');
+
+    // Reset to show all jobs
+    setFilteredJobs(jobs);
+  };
+
+
+  const removeLanguage = (languageToRemove: any) => {
+    // Create a new array without the language to be removed
+    const newLanguages = clickedLanguage.filter((lang) => lang !== languageToRemove);
+
+    setClickedLanguages(newLanguages);
+
+    // Filter the jobs based on the remaining languages
+    const updatedFilteredJobs = jobs.filter((job) => {
+      return (
+        newLanguages.length === 0 ||
+        newLanguages.every((lang) => job.languauges.includes(lang))
+      );
+    });
+
+    setFilteredJobs(updatedFilteredJobs);
+
+    // Save the filtered jobs and clicked languages to local storage
+    localStorage.setItem('filteredJobs', JSON.stringify(updatedFilteredJobs));
+    localStorage.setItem('clickedLanguages', JSON.stringify(newLanguages));
+  };
+
+
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <main className=''>
+      <div className='w-full bg-Desaturated-Dark-Cyan'>
+        <Image src={homeImg} alt="home image" className='w-full h-[60px]' />
+      </div>
+      {clickedLanguage.length > 0 &&
+        <div className=' w-full flex items-center justify-center mt-5'>
+          <div className='p-8 flex rounded-lg justify-between w-5/6 items-center bg-Light-GrayishCyanBackground shadow-2xl'>
+            <div className='flex sm:flex-row flex-col gap-2 sm:items-center  gap-col-2 sm:justify-center justify-start items-start w-full md:flex-wrap'>
+              {clickedLanguage.map((lang: string) => (
+                <div className='md:flex items-center justify-center gap-3 flex-wrap'>
+                  <div className='flex items-center justify-center '>
+                    <h1 className='text-lg font-bold p-1 text-base bg-Desaturated-Dark-Cyanbg p-1 headerlangu text-Desaturated-Dark-Cyan'>{lang}</h1>
+                    <div className='p-[13px] bg-Desaturated-Dark-Cyan headerrem cursor-pointer' onClick={() => removeLanguage(lang)}>
+                      <Image src={remove} alt="remove icon" width={10} height={10} />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <h1 onClick={clearFilters} className='text-Desaturated-Dark-Cyan hover:underline cursor-pointer transition duration-150 ease-out md:ease-in'>Clear</h1>
+          </div>
         </div>
-      </div>
+      }
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
 
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+      {filteredJobs.map((job) => (
+        <div key={job.id} className="w-full flex items-center justify-center md:mb-3 mb-12 mt-8">
+          <div className="flex md:gap-0 gap-8 md:flex-row flex-col md:items-center p-8 md:w-[90%] w-[90%] justify-between bg-Light-GrayishCyanBackground shadow-2xl rounded-lg">
+            <div className="md:flex md:place-center gap-4">
+              <div className='md:mt-0 mt-[-60px] md:mb-0'>
+                <Image src={job.Image01} alt="company logo" width={70} height={70} />
+              </div>
+              <div className="flex flex-col">
+                <div className="flex flex-col justify-center ">
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-lg text-Desaturated-Dark-Cyan font-bold">{job.company}</h1>
+                    {job.new && (
+                      <span className="text-white font-xs p-1 bg-Desaturated-Dark-Cyanbg rounded-full text-xs cursor-pointer">New!</span>
+                    )}
+                    {job.featured && (
+                      <span className="text-white font-xs p-1 bg-black rounded-full text-xs cursor-pointer">Featured</span>
+                    )}
+                  </div>
+                  <h2 className="text-base font-extrabold">{job.position}</h2>
+                </div>
+                <div className="flex items-center text-DarkGrayishCyan gap-3">
+                  <h4 className="text-base">{job.postedAt}</h4> .
+                  <h5>{job.contract}</h5> .
+                  <h3>{job.location}</h3>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 justify-center">
+              <div>
+                <div className="flex flex-wrap lg:gap-0 gap-2 items-center md:ms-8">
+                  {job.languauges.map((language: string, index: number) => (
+                    <span
+                    key={index}
+                    onClick={() => clicked(language)}
+                    className='flex items-center ms-2 p-1 text-Desaturated-Dark-Cyan bg-Desaturated-Dark-Cyanbg rounded-md text-base cursor-pointer hover:bg-Desaturated-Dark-Cyan hover:text-Light-GrayishCyanBackground'
+                  >
+                    {language}
+                  </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
     </main>
   )
 }
