@@ -60,12 +60,12 @@ export default function Home() {
   }, []);
 
 
-  useEffect(() => {
-    // Simulate loading data
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 10000);
-  }, []);
+  // useEffect(() => {
+  //   // Simulate loading data
+  //   setTimeout(() => {
+  //     setIsLoading(false);
+  //   }, 10000);
+  // }, []);
 
 
   useEffect(() => {
@@ -79,7 +79,7 @@ export default function Home() {
     // Simulate loading data
     setTimeout(() => {
       setIsLoading(false);
-    }, 2000);
+    }, 1000000);
   }, []);
 
 
