@@ -134,8 +134,8 @@ export default function Home() {
         <div className=' w-full flex items-center justify-center mt-5'>
           <div className='p-8 flex rounded-lg justify-between w-5/6 items-center bg-Light-GrayishCyanBackground shadow-2xl'>
             <div className='flex sm:flex-row flex-col gap-2 sm:items-center  gap-col-2 sm:justify-center justify-start items-start w-full md:flex-wrap'>
-              {clickedLanguage.map((lang: string) => (
-                <div className='md:flex items-center justify-center gap-3 flex-wrap'>
+              {clickedLanguage.map((lang: string, index: number) => (
+                <div className='md:flex items-center justify-center gap-3 flex-wrap' key={index}>
                   <div className='flex items-center justify-center '>
                     <h1 className='text-lg font-bold p-1 text-base bg-Desaturated-Dark-Cyanbg p-1 headerlangu text-Desaturated-Dark-Cyan'>{lang}</h1>
                     <div className='p-[13px] bg-Desaturated-Dark-Cyan headerrem cursor-pointer' onClick={() => removeLanguage(lang)}>
