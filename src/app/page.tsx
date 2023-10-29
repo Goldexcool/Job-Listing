@@ -13,14 +13,14 @@ export default function Home() {
   const [filteredJobs, setFilteredJobs] = useState(jobs);
 
 
-  const clicked = (language:any) => {
+  const clicked = (language: any) => {
     // Toggle the clicked language
     const updatedClickedLanguages = clickedLanguage.includes(language)
       ? clickedLanguage.filter((lang) => lang !== language)
       : [...clickedLanguage, language];
-  
+
     setClickedLanguages(updatedClickedLanguages);
-  
+
     // Filter the jobs based on all selected languages
     const updatedFilteredJobs = jobs.filter((job) => {
       return (
@@ -28,9 +28,9 @@ export default function Home() {
         updatedClickedLanguages.every((lang) => job.languauges.includes(lang))
       );
     });
-  
+
     setFilteredJobs(updatedFilteredJobs);
-  
+
     // Save the filtered jobs and clicked languages to local storage
     localStorage.setItem('filteredJobs', JSON.stringify(updatedFilteredJobs));
     localStorage.setItem('clickedLanguages', JSON.stringify(updatedClickedLanguages));
@@ -53,7 +53,7 @@ export default function Home() {
 
 
 
-  
+
   useEffect(() => {
     // This effect runs only once on component mount
     setClickedLanguages([]); // Ensure it's empty when the component mounts
@@ -88,7 +88,7 @@ export default function Home() {
   }
 
 
- 
+
 
 
   const clearFilters = () => {
@@ -128,7 +128,7 @@ export default function Home() {
   return (
     <main className=''>
       <div className='w-full bg-Desaturated-Dark-Cyan'>
-        <Image src={homeImg} alt="home image" className='w-full h-[60px]' />
+        <Image src={homeImg} alt="home image" className='w-full h-[60px] md:h-[100px]' />
       </div>
       {clickedLanguage.length > 0 &&
         <div className=' w-full flex items-center justify-center mt-5'>
@@ -183,12 +183,12 @@ export default function Home() {
                 <div className="flex flex-wrap lg:gap-0 gap-2 items-center md:ms-8">
                   {job.languauges.map((language: string, index: number) => (
                     <span
-                    key={index}
-                    onClick={() => clicked(language)}
-                    className='flex items-center ms-2 p-1 text-Desaturated-Dark-Cyan bg-Desaturated-Dark-Cyanbg rounded-md text-base cursor-pointer hover:bg-Desaturated-Dark-Cyan hover:text-Light-GrayishCyanBackground'
-                  >
-                    {language}
-                  </span>
+                      key={language} // Unique identifier for each language
+                      onClick={() => clicked(language)}
+                      className='flex items-center ms-2 p-1 text-Desaturated-Dark-Cyan bg-Desaturated-Dark-Cyanbg rounded-md text-base cursor-pointer hover:bg-Desaturated-Dark-Cyan hover:text-Light-GrayishCyanBackground'
+                    >
+                      {language}
+                    </span>
                   ))}
                 </div>
               </div>
